@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-@EntityScan("org.iqvia.api.entity")
+@EntityScan("org.bravo.api.entity")
 @SpringBootApplication
 public class ControllerApiApplication {
 
