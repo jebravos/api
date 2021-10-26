@@ -40,7 +40,7 @@ public abstract class AbstractWorker implements SchedulerWorker {
                     return Mono.empty();
                 }).blockOptional()
                 .ifPresent(response -> {
-                    Task doingTask = taskService.doingTask(task, response.id());
+                    Task doingTask = taskService.doingTask(task, response.getId());
                     waitForCompletion(doingTask);
                     taskService.taskDone(doingTask);
                 });
@@ -56,7 +56,7 @@ public abstract class AbstractWorker implements SchedulerWorker {
             } catch (InterruptedException e) {
                 throw new InternalErrorException("Error waiting for completion of the task " + doingTask.getId(), e);
             }
-        } while (!getClient().getStatus(doingTask).state().equals("DONE"));
+        } while (!getClient().getStatus(doingTask).getState().equals("DONE"));
     }
 
     protected abstract RepoClient getClient();
