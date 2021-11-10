@@ -1,5 +1,7 @@
 package org.bravo.api.entity;
 
+import org.bravo.api.task.TaskPayload;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -10,18 +12,19 @@ public class Task {
     private final Long id;
     private final LocalDateTime timestamp;
     private final String algoId;
-    private final String payload;
     private String executionId;
     private Status status;
     private String resultFileName;
 
-    public static Task newTask(String algoId, String payload){
+    private TaskPayload payload;
+
+    public static Task newTask(String algoId, TaskPayload payload){
         Task task = new Task(algoId, payload);
         task.setStatus(Task.Status.TODO);
         return task;
     }
 
-    private Task(String algoId, String payload){
+    private Task(String algoId, TaskPayload payload){
         this.algoId = algoId;
         this.payload = payload;
         this.id = TaskSequence.nextSequence();
@@ -38,10 +41,6 @@ public class Task {
 
     public void setStatus(Status status) {
         this.status = status;
-    }
-
-    public String getPayload() {
-        return payload;
     }
 
     public String getExecutionId() {
@@ -78,6 +77,10 @@ public class Task {
 
     public static Predicate<Task> algorithmIdAndExecutionId(String algorithmId, String executionId) {
         return task -> task.getAlgoId().equals(algorithmId) && task.getExecutionId().equals(executionId);
+    }
+
+    public TaskPayload getPayload() {
+        return payload;
     }
 
     public enum Status {

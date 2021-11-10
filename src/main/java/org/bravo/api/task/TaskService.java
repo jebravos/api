@@ -15,7 +15,7 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public Task save(final String algorithmId, final String payload){
+    public Task save(final String algorithmId, final TaskPayload payload){
         Task task = Task.newTask(algorithmId, payload);
         return taskRepository.save(task);
     }

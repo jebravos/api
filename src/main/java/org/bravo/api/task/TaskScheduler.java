@@ -16,25 +16,31 @@ public class TaskScheduler {
     private final AlgorithmService algorithmService;
     private final TaskService taskService;
     private final Map<String, SchedulerWorker> workers;
-
+    private final Map<String, PayloadSerializer> serializers;
 
     public TaskScheduler(AlgorithmService algorithmService,
                          TaskService taskService,
-                         Map<String, SchedulerWorker> workers) {
+                         Map<String, SchedulerWorker> workers, Map<String, PayloadSerializer> serializers) {
 
         this.algorithmService = algorithmService;
         this.taskService = taskService;
         this.workers = workers;
+        this.serializers = serializers;
     }
-
 
     public String createNewTask(final String algorithmId, final String payload) {
 
         Algorithm algorithm = algorithmService.findAlgorithmById(algorithmId);
-        Task task = taskService.save(algorithm.getId(), payload);
+        Task task = taskService.save(algorithm.getId(), payloadSerializer(algorithmId).serialize(payload));
         schedule(task);
 
         return task.getId().toString();
+    }
+
+    private PayloadSerializer payloadSerializer(String algorithmId){
+
+        return Optional.ofNullable(serializers.get(algorithmId + "Serializer"))
+                .orElseThrow(() -> new UnsupportedOperationException("No serializer found for " + algorithmId));
     }
 
     private void schedule(Task task) {

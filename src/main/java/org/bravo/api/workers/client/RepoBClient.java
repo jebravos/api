@@ -1,10 +1,10 @@
 package org.bravo.api.workers.client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.bravo.api.algos.RepoClient;
 import org.bravo.api.entity.Task;
 import org.bravo.api.exceptions.InternalErrorException;
 import org.bravo.api.model.AlgoStatusResponse;
+import org.bravo.api.task.PayloadB;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -21,17 +21,17 @@ public class RepoBClient extends RepoClient {
     }
 
     @Override
-    public Mono<AlgoStatusResponse> computeTask(Task task) throws JsonProcessingException {
+    public Mono<AlgoStatusResponse> computeTask(Task task)  {
 
-        RepoBPayload repoBPayload = getMapper().readValue(task.getPayload(), RepoBPayload.class);
+        PayloadB payload = (PayloadB) task.getPayload();
 
         return this.client
                 .post()
                 .uri(uriBuilder -> uriBuilder
                         .path(COMPUTE_TASK)
-                        .queryParam("laboratory_name", repoBPayload.getLaboratoryName())
-                        .queryParam("identification_column", repoBPayload.getIdentificationColumn())
-                        .queryParam("input_file", repoBPayload.getInputFile())
+                        .queryParam("laboratory_name", payload.getLaboratoryName())
+                        .queryParam("identification_column", payload.getIdentificationColumn())
+                        .queryParam("input_file", payload.getInputFile())
                         .build())
                 .retrieve()
                 .bodyToMono(AlgoStatusResponse.class)
@@ -39,35 +39,4 @@ public class RepoBClient extends RepoClient {
                 .onErrorMap(Exception.class, ex -> new InternalErrorException("Error", ex));
     }
 
-
-    private static class RepoBPayload{
-
-        private String laboratoryName;
-        private String identificationColumn;
-        private String inputFile;
-
-        public String getLaboratoryName() {
-            return laboratoryName;
-        }
-
-        public void setLaboratoryName(String laboratoryName) {
-            this.laboratoryName = laboratoryName;
-        }
-
-        public String getIdentificationColumn() {
-            return identificationColumn;
-        }
-
-        public void setIdentificationColumn(String identificationColumn) {
-            this.identificationColumn = identificationColumn;
-        }
-
-        public String getInputFile() {
-            return inputFile;
-        }
-
-        public void setInputFile(String inputFile) {
-            this.inputFile = inputFile;
-        }
-    }
 }

@@ -43,12 +43,5 @@ public class Algorithm {
         return this.url + ":" + port;
     }
 
-//    public Set<Task> getTasks() {
-//        return tasks;
-//    }
-//
-//    public void setTasks(Set<Task> tasks) {
-//        this.tasks = tasks;
-//    }
 }
 
