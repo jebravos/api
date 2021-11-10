@@ -1,4 +1,4 @@
-package org.bravo.api.config;
+package org.bravo.api.workers.repo_a;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bravo.api.algos.RepoClient;
 import org.bravo.api.exceptions.InternalErrorException;
-import org.bravo.api.task.PayloadA;
 import org.bravo.api.task.PayloadSerializer;
 import org.bravo.api.task.SchedulerWorker;
 import org.bravo.api.task.TaskService;

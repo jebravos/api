@@ -1,10 +1,10 @@
-package org.bravo.api.workers.client;
+package org.bravo.api.workers.repo_a;
 
 import org.bravo.api.algos.RepoClient;
 import org.bravo.api.entity.Task;
 import org.bravo.api.exceptions.InternalErrorException;
 import org.bravo.api.model.AlgoStatusResponse;
-import org.bravo.api.task.PayloadB;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -14,25 +14,26 @@ import java.time.Duration;
 import static java.time.temporal.ChronoUnit.SECONDS;
 
 @Component
-public class RepoBClient extends RepoClient {
+public class RepoAClient extends RepoClient {
 
-    public RepoBClient(WebClient clientB) {
-        super(clientB);
+
+    protected RepoAClient(WebClient clientA) {
+        super(clientA);
     }
 
-    @Override
-    public Mono<AlgoStatusResponse> computeTask(Task task)  {
+    public Mono<AlgoStatusResponse> computeTask(Task task) {
 
-        PayloadB payload = (PayloadB) task.getPayload();
+        PayloadA payload = (PayloadA) task.getPayload();
 
         return this.client
                 .post()
                 .uri(uriBuilder -> uriBuilder
                         .path(COMPUTE_TASK)
                         .queryParam("laboratory_name", payload.getLaboratoryName())
-                        .queryParam("identification_column", payload.getIdentificationColumn())
-                        .queryParam("input_file", payload.getInputFile())
+                        .queryParam("sfdc", payload.getSfdc())
                         .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(payload.getTranches())
                 .retrieve()
                 .bodyToMono(AlgoStatusResponse.class)
                 .timeout(Duration.of(5, SECONDS))

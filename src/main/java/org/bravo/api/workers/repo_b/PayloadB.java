@@ -1,6 +1,7 @@
-package org.bravo.api.task;
+package org.bravo.api.workers.repo_b;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.bravo.api.task.TaskPayload;
 
 public class PayloadB extends TaskPayload {
 

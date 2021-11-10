@@ -1,4 +1,3 @@
 package org.bravo.api.task;
 
-public class TaskPayload {
-}
+public class TaskPayload { }
